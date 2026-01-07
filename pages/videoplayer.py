@@ -309,9 +309,9 @@ def display_video_screen(action_id, video_filename, config):
     """, unsafe_allow_html=True)
 
     # Display video info
-    current_index = st.session_state.get('current_video_index', 0) + 1
-    total_videos = len(st.session_state.videos_to_rate)
-    st.info(f"🎬 **Video {current_index} of {total_videos}**. Watch the video carefully.")
+    #current_index = st.session_state.get('current_video_index', 0) + 1
+    #total_videos = len(st.session_state.videos_to_rate)
+    #st.info(f"🎬 **Video {current_index} of {total_videos}**. Watch the video carefully.")
 
     # Use shared display function in video-only mode
     display_video_rating_interface(
