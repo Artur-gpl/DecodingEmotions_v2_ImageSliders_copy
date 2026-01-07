@@ -44,7 +44,7 @@ groups:
 scales:
 - active: true
   type: "slider"
-  title: "Angry"
+  title: "Anger"
   label_low: ""
   label_high: ""
   slider_min: 0
@@ -55,7 +55,7 @@ scales:
 
 - active: true
   type: "slider"
-  title: "Happy"
+  title: "Happiness"
   label_low: ""
   label_high: ""
   slider_min: 0
@@ -66,7 +66,7 @@ scales:
 
 - active: true
   type: "slider"
-  title: "Sad"
+  title: "Sadness"
   label_low: ""
   label_high: ""
   slider_min: 0
@@ -77,7 +77,7 @@ scales:
 
 - active: true
   type: "slider"
-  title: "Scared"
+  title: "Fear/Scared"
   label_low: ""
   label_high: ""
   slider_min: 0
@@ -88,7 +88,7 @@ scales:
 
 - active: true
   type: "slider"
-  title: "Surprised"
+  title: "Surprise"
   label_low: ""
   label_high: ""
   slider_min: 0
@@ -99,7 +99,7 @@ scales:
 
 - active: true
   type: "slider"
-  title: "Disgusted"
+  title: "Disgust"
   label_low: ""
   label_high: ""
   slider_min: 0
@@ -119,6 +119,50 @@ scales:
   required_to_proceed: false
   group: "emotions"
 
+- active: true
+  type: "slider"
+  title: "Embarassment"
+  label_low: ""
+  label_high: ""
+  slider_min: 0
+  slider_max: 100
+  initial_state: "center"
+  required_to_proceed: false
+  group: "emotions"
+  
+- active: true
+  type: "slider"
+  title: "Pride"
+  label_low: ""
+  label_high: ""
+  slider_min: 0
+  slider_max: 100
+  initial_state: "center"
+  required_to_proceed: false
+  group: "emotions"
+  
+- active: true
+  type: "slider"
+  title: "Shame"
+  label_low: ""
+  label_high: ""
+  slider_min: 0
+  slider_max: 100
+  initial_state: "center"
+  required_to_proceed: false
+  group: "emotions"
+  
+- active: true
+  type: "slider"
+  title: "Triumph"
+  label_low: ""
+  label_high: ""
+  slider_min: 0
+  slider_max: 100
+  initial_state: "center"
+  required_to_proceed: false
+  group: "emotions"
+  
 - active: true
   type: "slider"
   title: "Neutral"
