@@ -307,10 +307,6 @@ def display_familiarization_video_screen(video_filename, config):
     #total_videos = len(st.session_state.familiarization_videos)
     #st.info(f"🎯 **Familiarization Trial - Video {current_index + 1} of {total_videos}**. Watch the video carefully.")
 
-    # Define header content as a function
-    #def show_familiarization_header():
-        pass  # Already shown above
-
     # Use shared display function in video-only mode
     display_video_rating_interface(
         video_filename=video_filename,
@@ -320,7 +316,7 @@ def display_familiarization_video_screen(video_filename, config):
         key_prefix="famil_scale_",
         action_id=None,
         metadata=None,
-        header_content=show_familiarization_header,
+        header_content=None,
         display_video_func=display_video_with_mode,
         display_mode='video_only'
     )
@@ -341,7 +337,7 @@ def display_familiarization_rating_screen(video_filename, config):
     # Display rating info
     current_index = st.session_state.familiarization_video_index
     total_videos = len(st.session_state.familiarization_videos)
-    st.info(f"📊 **Familiarization Trial - Rating {current_index + 1} of {total_videos}**. Please rate the video you just watched. *These ratings will not be saved.*")
+    #st.info(f"📊 **Familiarization Trial - Rating {current_index + 1} of {total_videos}**. Please rate the video you just watched. *These ratings will not be saved.*")
 
     # Use shared display function in rating-only mode
     scale_values = display_video_rating_interface(
@@ -394,7 +390,7 @@ def display_familiarization_interface(video_filename, config):
     def show_familiarization_header():
         current_index = st.session_state.familiarization_video_index
         total_videos = len(st.session_state.familiarization_videos)
-        st.info(f"🎯 **Familiarization Trial** - **Video {current_index + 1} of {total_videos}**. These ratings will not be saved.")
+        #st.info(f"🎯 **Familiarization Trial** - **Video {current_index + 1} of {total_videos}**. These ratings will not be saved.")
 
     # Use shared display function
     scale_values = display_video_rating_interface(
