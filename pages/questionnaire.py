@@ -37,8 +37,8 @@ def show_questionnaire_form(fields):
     """Display the main questionnaire form."""
     user = st.session_state.user
 
-    st.title("📋 Questionnaire")
-    st.markdown("Please provide the following information:")
+    st.title("📋 Fragebogen")
+    st.markdown("Bitte geben Sie die folgenden Informationen an:")
     st.markdown("---")
 
     # Create form
@@ -216,10 +216,7 @@ def show_confirmation_panel():
     st.markdown(f"# `{user.user_id}`")
 
     st.warning("""
-    **⚠️ IMPORTANT: Please memorize or write down your User ID!**
 
-    You will need this ID if you want to continue rating videos in a future session.
-    This ID is the only way to link your ratings across sessions.
     """)
 
     st.markdown("---")
