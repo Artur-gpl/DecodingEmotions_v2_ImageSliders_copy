@@ -17,33 +17,25 @@ def show():
     # Download button for consent PDF
     if consent_pdf_path and os.path.exists(consent_pdf_path):
         st.markdown("""
-        **All information about this study is contained in the participant information document.**
+        Unser Forschungsprojekt befasst sich mit der Frage, inwiefern Körpersignale und Gesichtssignale die Einschätzung von Wettkampfergebnissen sowie die Erkennung von Emotionen in sportlichen Kontexten beeinflussen.
 
-        Please download and read the document carefully before providing your consent below.
+        Sie haben das Recht, jederzeit Fragen zu stellen und die Untersuchung ohne Gefährdung oder sonstige Nachteile für Sie jederzeit abzubrechen. Die Teilnahme ist freiwillig.
+Die Deutsche Sporthochschule Köln hat keine Probandenversicherung für dieses Vorhaben abgeschlossen.
+
+Eine Haftung für Sach- und Personenschäden gegen die Deutsche Sporthochschule Köln und ihre Mitarbeiter:innen ist ausgeschlossen, es sei denn, der entstandene Schaden beruht auf Vorsatz oder grober Fahrlässigkeit.
+Einwilligung zur Verarbeitung personenbezogener Daten
+Eine Verarbeitung Ihrer personenbezogenen Daten im Rahmen des oben genannten Forschungsprojektes ist nur mit Ihrer ausdrücklichen und freiwilligen Einwilligung möglich.
+
+Hiermit willigen Sie ausdrücklich ein, dass die Deutsche Sporthochschule Köln zum Zwecke des Forschungsprojektes folgende Daten von Ihnen erheben, speichern und nutzen darf: Antworten im Online-Fragebogen sowie allgemeine demografische Angaben. Eine Veröffentlichung der Daten erfolgt nur in anonymisierter Form, also ohne die Möglichkeit, einen Rückschluss auf Ihre Person zu ziehen.
+Es ist nicht beabsichtigt, Daten an Dritte weiterzugeben.
+
+Sie können diese Einwilligung jederzeit mit Wirkung für die Zukunft ohne Nachteile widerrufen. In diesem Falle werden Ihre personenbezogenen Daten, soweit eine Zuordnung möglich ist, unverzüglich gelöscht. Durch den Widerruf der Einwilligung wird die Rechtmäßigkeit der aufgrund der Einwilligung bis zum Widerruf erfolgten Verarbeitung nicht berührt. Eine weitere Teilnahme am Forschungsprojekt ist nur bei Vorliegen der Einwilligung möglich.
+Die Verwendung dieser Daten erfolgt ausschließlich nach den gesetzlichen Bestimmungen, insbesondere der DSGVO, und entsprechend dieser Erklärung.
+
         """)
 
-        st.markdown("")  # Spacing
+        
 
-        # Read PDF file and create download button
-        with open(consent_pdf_path, "rb") as pdf_file:
-            pdf_bytes = pdf_file.read()
-
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col2:
-            st.download_button(
-                label="📄 View Consent Form Details",
-                data=pdf_bytes,
-                file_name="participant_information.pdf",
-                mime="application/pdf",
-                use_container_width=True,
-                type="primary"
-            )
-    else:
-        st.warning("⚠️ Participant information document is not available. Please contact the study administration.")
-        if consent_pdf_path:
-            st.info(f"Expected path: {consent_pdf_path}")
-
-    st.markdown("---")
 
     # Consent Section
     st.markdown("## Consent Declaration")
@@ -56,11 +48,10 @@ def show():
 
     st.markdown("""
 
-                1. I have read and understood the participant information above
-                2. I consent to participate in this research study voluntarily
-                3. I consent to the processing of my data anonymously for research purposes
-                4. I consent to being contacted via email for potential follow-up questions
-                5. I am at least 18 years old
+                1. Ich habe die oben stehenden Teilnehmerinformationen gelesen und verstanden
+                2. Ich nehme freiwillig an dieser Forschungsstudie teil
+                3. Meine Daten können anonym zu Forschungszwecken genutzt werden
+                4. Ich bin mindestens 18 Jahre alt
                 """)
     
     st.markdown("")
