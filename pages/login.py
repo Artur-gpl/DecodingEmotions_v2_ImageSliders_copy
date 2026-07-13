@@ -8,22 +8,26 @@ def show():
     """Display the login screen with welcome message."""
     # Welcome message at the top
     st.markdown("""
-    ## Willkommen!
+    ## Welcome!
 
-Vielen Dank für Ihre Teilnahme!
+    Thanks for your participation! 
+    
+    If you have participated before, please enter your user ID below to directly 
+    continue where you left off.  
+    
+    If you are a new participant, you will first receive more information about the study and will need to provide your consent 
+    before proceeding.
+    
+    Next, you will complete a brief demographic questionnaire. The information given in the questionnaire will not be linked 
+    to your identity and is very important for putting the study results into context. 
+                
+    Finally, **before starting the main task, you will receive 3 practice trials** to get used to the survey!
 
-Wenn Sie bereits teilgenommen haben, geben Sie bitte unten Ihre Benutzer-ID ein, um direkt dort weiterzumachen, wo Sie aufgehört haben.
+    ### Important Notes:
 
-Wenn Sie neu teilnehmen, erhalten Sie zunächst weitere Informationen zur Studie und müssen Ihre Einwilligung geben, bevor Sie fortfahren können.
-
-Anschließend füllen Sie einen kurzen demografischen Fragebogen aus. Die im Fragebogen angegebenen Informationen werden nicht mit Ihrer Identität verknüpft und sind sehr wichtig, um die Studienergebnisse einordnen zu können.
-
-Zum Schluss erhalten Sie  **vor Beginn der Hauptaufgabe 2 Übungsdurchgänge** um sich mit der Umfrage vertraut zu machen!
-
-    ### Wichtige Hinweise:
-
-    - Bitte führen Sie die Bewertungen in einer ruhigen Umgebung ohne Ablenkungen durch
-    - Alle Daten werden mithilfe einer generierten Benutzer-ID anonymisiert
+    - Please complete ratings in a quiet environment without distractions
+    - All data is anonymized using a generated user ID
+    - You can take breaks between videos - your progress is saved
 
     ---
     """)
@@ -31,12 +35,12 @@ Zum Schluss erhalten Sie  **vor Beginn der Hauptaufgabe 2 Übungsdurchgänge** u
     st.markdown("")  # Spacing
 
     # Login section
-    st.markdown("### Haben Sie bereits an dieser Studie teilgenommen?")
+    st.markdown("### Have you participated in this study before?")
 
     # Radio button for Yes/No
     participated = st.radio(
         "Select one:",
-        options=["Nein, dies ist meine erste Teilnahme.", "Ja, ich habe bereits teilgenommen."],
+        options=["No, this is my first time", "Yes, I have participated before"],
         key="participated_radio",
         label_visibility="collapsed"
     )
@@ -45,13 +49,13 @@ Zum Schluss erhalten Sie  **vor Beginn der Hauptaufgabe 2 Übungsdurchgänge** u
 
     # If user selected "Yes", show user ID input
     if participated == "Yes, I have participated before":
-        st.markdown("### Bitte geben Sie Ihre Benutzer-ID ein")
+        st.markdown("### Please enter your User ID")
 
         user_id_input = st.text_input(
             "User ID:",
             key="user_id_input",
             placeholder="Enter your user ID (e.g., ABCD12 or giha3042)",
-            help="Ihre Benutzer-ID wurde Ihnen nach dem Ausfüllen des Fragebogens angezeigt"
+            help="Your user ID was shown to you after completing the questionnaire"
         ).strip()
 
         # Check if user ID exists
@@ -78,12 +82,12 @@ Zum Schluss erhalten Sie  **vor Beginn der Hauptaufgabe 2 Übungsdurchgänge** u
             # Validation
             if participated == "Yes, I have participated before":
                 if not user_id_input:
-                    st.error("Bitte geben Sie Ihre Benutzer-ID ein")
-                    st.info("💡 Wenn Sie sich nicht an Ihre Benutzer-ID erinnern können, wenden Sie sich bitte an die Studienleitung.")
+                    st.error("Please enter your user ID")
+                    st.info("💡 If you cannot remember your user ID, please reach out to the study administration.")
                     st.stop()
                 elif not st.session_state.get('user_id_valid', False):
-                    st.error("Benutzer-ID nicht gefunden. Bitte überprüfen Sie Ihre ID.")
-                    st.info("💡 Wenn Sie sich nicht an Ihre Benutzer-ID erinnern können, wenden Sie sich bitte an die Studienleitung.")
+                    st.error("User ID not found. Please check your ID.")
+                    st.info("💡 If you cannot remember your user ID, please reach out to the study administration.")
                     st.stop()
                 else:
                     # Valid returning user - use the validated ID with original case
