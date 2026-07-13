@@ -82,7 +82,6 @@ def show():
             else:
                 # Store consent in session state with timestamp
                 from datetime import datetime
-                st.session_state.consent_given = True
-                st.session_state.consent_timestamp = datetime.now().isoformat(timespec='seconds')
-                st.session_state.page = 'questionnaire'
-                st.rerun()
+        st.session_state.consent_given = True
+        st.session_state.consent_timestamp = datetime.now().isoformat(timespec='seconds')
+        st.session_state.page = 'questionnaire'
