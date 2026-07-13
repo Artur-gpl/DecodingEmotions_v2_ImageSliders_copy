@@ -1,6 +1,5 @@
 id,AthleteName,Nationality,LowHighPD,Gender,OlympicParalympic,WinLoss,Condition
-img_0038,Beatriz Souza,BRA,High,Female,Olympic,Win,Image_Slider
-img_0003,Shirine Boukli,FRA,High,Female,Olympic,Win,Image_Slider
+img_0005,Laura Martinez Abelenda,ESP,High,Female,Olympic,Loss,Image_Slider
 img_0018,Eteri Liparteliani,GEO,High,Female,Olympic,Loss,Image_Slider
 img_0036,Rika Takayama,JPN,High,Female,Olympic,Loss,Image_Slider
 img_0121,Alana Maldanado,BRA,High,Female,Paralympic,Win,Image_Slider
