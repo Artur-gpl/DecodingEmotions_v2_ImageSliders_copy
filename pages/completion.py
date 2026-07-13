@@ -87,9 +87,9 @@ def show():
     st.success("""
     ### Thank you for your participation!
 
-    You have completed rating all available videos.
+    You have completed rating all available images.
 
-    Below, you see how well you performed in predicting the competition outcomes based on the videos.
+    Below, you see how well you performed in predicting the competition outcomes based on the images.
     """)
 
     # Calculate and display accuracy statistics
