@@ -8,25 +8,26 @@ def show():
     #st.title("⚽ Creativity Rating App")
 
     st.markdown("""
-    ## Willkommen!
+    ## Welcome!
 
-Sie erhalten in Kürze spezifische Informationen zur Studie. Hier finden Sie eine Übersicht über die einzelnen Schritte:
+    You will be receiving specific information regarding the study soon. Here you will find an overview of the steps involved in the study:
 
-    ### Anweisungen:
+    ### Instructions:
 
-    1. **Login**: Zunächst geben Sie an, ob Sie bereits teilgenommen haben
-    2. **Fragebogen**: Neue Teilnehmende füllen einen kurzen demografischen Fragebogen aus
-    3. **Eingewöhnung**: Sie durchlaufen Übungsdurchgänge, um sich mit der Bewertungsoberfläche vertraut zu machen
-    4. **Bewertung**: Sie sehen Bilder und bewerten verschiedene Aspekte jedes Bildes
+    1. **Login**: First, you'll indicate whether you've participated before
+    2. **Questionnaire**: New users will complete a brief demographic questionnaire
+    3. **Familiarization**: You'll go through practice trials to get used to the rating interface
+    4. **Rating**: You'll watch video clips and rate various aspects of each clip
 
-    ### Wichtige Hinweise:
+    ### Important Notes:
 
-    - Bitte führen Sie die Bewertungen in einer ruhigen Umgebung ohne Ablenkungen durch
-    - Alle Daten werden mithilfe einer generierten Benutzer-ID anonymisiert
+    - Please complete ratings in a quiet environment without distractions
+    - All data is anonymized using a generated user ID
+    - You can take breaks between videos - your progress is saved
 
     ---
 
-    **Bereit zu beginnen?** Klicken Sie auf die Schaltfläche unten, um fortzufahren.
+    **Ready to begin?** Click the button below to proceed.
     """)
 
     st.markdown("")  # Spacing
