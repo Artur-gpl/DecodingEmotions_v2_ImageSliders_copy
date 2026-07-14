@@ -13,8 +13,8 @@ from google.oauth2.service_account import Credentials
 _gsheets_connection = None
 _gspread_client = None
 
-USERS_WORKSHEET = "Demographics"
-RATINGS_WORKSHEET = "Ratings"
+USERS_WORKSHEET = "users_noface"
+RATINGS_WORKSHEET = "ratings_noface"
 
 
 def get_gsheets_connection():
@@ -77,13 +77,6 @@ def get_gspread_client():
 def append_rating_to_gsheets(rating_data, worksheet=RATINGS_WORKSHEET):
     """
     Append a single rating row to Google Sheets using true append (no overwrite).
-
-    Parameters:
-        rating_data: Dictionary with rating information
-        worksheet: Name of worksheet to write to
-
-    Returns:
-        True if successful, False otherwise
     """
     try:
         gspread_client = get_gspread_client()
@@ -139,12 +132,6 @@ def append_rating_to_gsheets(rating_data, worksheet=RATINGS_WORKSHEET):
 def read_ratings_from_gsheets(worksheet=RATINGS_WORKSHEET):
     """
     Read all ratings from Google Sheets.
-
-    Parameters:
-        worksheet: Name of worksheet to read from
-
-    Returns:
-        DataFrame with all ratings, or empty DataFrame if failed
     """
     try:
         conn = get_gsheets_connection()
@@ -162,14 +149,7 @@ def read_ratings_from_gsheets(worksheet=RATINGS_WORKSHEET):
 
 def get_rated_videos_for_user_from_gsheets(user_id, worksheet=RATINGS_WORKSHEET):
     """
-    Get list of video IDs already rated by a specific user from Google Sheets (case-insensitive).
-
-    Parameters:
-        user_id: User identifier
-        worksheet: Name of worksheet to read from
-
-    Returns:
-        List of action IDs
+    Get list of video IDs already rated by a specific user from Google Sheets.
     """
     try:
         df = read_ratings_from_gsheets(worksheet=worksheet)
@@ -192,13 +172,6 @@ def get_rated_videos_for_user_from_gsheets(user_id, worksheet=RATINGS_WORKSHEET)
 def append_user_to_gsheets(user_data, worksheet=USERS_WORKSHEET):
     """
     Append a single user row to Google Sheets using true append (no overwrite).
-
-    Parameters:
-        user_data: Dictionary with user information
-        worksheet: Name of worksheet to write to
-
-    Returns:
-        True if successful, False otherwise
     """
     try:
         gspread_client = get_gspread_client()
@@ -254,12 +227,6 @@ def append_user_to_gsheets(user_data, worksheet=USERS_WORKSHEET):
 def read_users_from_gsheets(worksheet=USERS_WORKSHEET):
     """
     Read all users from Google Sheets.
-
-    Parameters:
-        worksheet: Name of worksheet to read from
-
-    Returns:
-        DataFrame with all users, or empty DataFrame if failed
     """
     try:
         conn = get_gsheets_connection()
@@ -278,13 +245,6 @@ def read_users_from_gsheets(worksheet=USERS_WORKSHEET):
 def user_exists_in_gsheets(user_id, worksheet=USERS_WORKSHEET):
     """
     Check if a user exists in Google Sheets (case-insensitive).
-
-    Parameters:
-        user_id: User identifier to check
-        worksheet: Name of worksheet to read from
-
-    Returns:
-        True if user exists, False otherwise
     """
     try:
         df = read_users_from_gsheets(worksheet=worksheet)
@@ -304,12 +264,6 @@ def user_exists_in_gsheets(user_id, worksheet=USERS_WORKSHEET):
 def get_all_user_ids_from_gsheets(worksheet=USERS_WORKSHEET):
     """
     Get all user IDs from Google Sheets.
-
-    Parameters:
-        worksheet: Name of worksheet to read from
-
-    Returns:
-        List of all user IDs
     """
     try:
         df = read_users_from_gsheets(worksheet=worksheet)
