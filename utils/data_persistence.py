@@ -5,7 +5,6 @@ Implements flexible storage strategy based on config: local, online, or both.
 import json
 import os
 import streamlit as st
-from datetime import datetime
 from utils.gsheets_manager import (
     append_rating_to_gsheets,
     get_rated_videos_for_user_from_gsheets,
@@ -13,8 +12,16 @@ from utils.gsheets_manager import (
     user_exists_in_gsheets
 )
 
+USERS_WORKSHEET = "users_noface"
+RATINGS_WORKSHEET = "ratings_noface"
+
+
 def save_user_data(user):
+    """
+    Save user demographic data based on configured storage_mode.
+    """
     user_data = user.to_dict()
+
     config = st.session_state.get('config', {})
     storage_mode = config.get('settings', {}).get('storage_mode', 'both')
 
@@ -23,7 +30,7 @@ def save_user_data(user):
 
     if storage_mode in ['online', 'both']:
         try:
-            gsheets_success = append_user_to_gsheets(user_data, worksheet="Demographics")
+            gsheets_success = append_user_to_gsheets(user_data, worksheet=USERS_WORKSHEET)
             if gsheets_success:
                 print(f"[INFO] ✓ User data saved to Google Sheets: {user.user_id}")
         except Exception as e:
@@ -50,7 +57,11 @@ def save_user_data(user):
         print(f"[ERROR] CRITICAL: All storage methods failed for user {user.user_id}")
         return False
 
+
 def save_rating(user_id, action_id, scale_values):
+    """
+    Save rating data based on configured storage_mode.
+    """
     rating_data = {
         'user_id': user_id,
         'id': action_id
@@ -79,7 +90,7 @@ def save_rating(user_id, action_id, scale_values):
 
     if storage_mode in ['online', 'both']:
         try:
-            gsheets_success = append_rating_to_gsheets(rating_data, worksheet="Ratings")
+            gsheets_success = append_rating_to_gsheets(rating_data, worksheet=RATINGS_WORKSHEET)
             if gsheets_success:
                 print(f"[INFO] ✓ Rating saved to Google Sheets: {user_id}_{action_id}")
         except Exception as e:
@@ -103,12 +114,16 @@ def save_rating(user_id, action_id, scale_values):
         print(f"[ERROR] CRITICAL: All storage methods failed for {user_id}_{action_id}")
         return False
 
+
 def get_all_existing_user_ids():
+    """
+    Get all existing user IDs from the system.
+    """
     user_ids = set()
 
     try:
         from utils.gsheets_manager import get_all_user_ids_from_gsheets
-        gsheets_ids = get_all_user_ids_from_gsheets(worksheet="Demographics")
+        gsheets_ids = get_all_user_ids_from_gsheets(worksheet=USERS_WORKSHEET)
         user_ids.update(gsheets_ids)
         print(f"[INFO] Retrieved {len(gsheets_ids)} user IDs from Google Sheets")
     except Exception as e:
@@ -126,9 +141,13 @@ def get_all_existing_user_ids():
 
     return list(user_ids)
 
+
 def user_exists(user_id):
+    """
+    Check if a user_id exists in the system (case-insensitive).
+    """
     try:
-        if user_exists_in_gsheets(user_id, worksheet="Demographics"):
+        if user_exists_in_gsheets(user_id, worksheet=USERS_WORKSHEET):
             print(f"[INFO] User {user_id} found in Google Sheets")
             return True
     except Exception as e:
@@ -162,9 +181,13 @@ def user_exists(user_id):
         print(f"[ERROR] Failed to check user existence in both sources: {e}")
         return False
 
+
 def get_rated_videos_for_user(user_id):
+    """
+    Get list of video IDs already rated by a user (case-insensitive).
+    """
     try:
-        gsheets_ids = get_rated_videos_for_user_from_gsheets(user_id, worksheet="Ratings")
+        gsheets_ids = get_rated_videos_for_user_from_gsheets(user_id, worksheet=RATINGS_WORKSHEET)
         if gsheets_ids:
             print(f"[INFO] Retrieved {len(gsheets_ids)} rated videos from Google Sheets for user {user_id}")
             return gsheets_ids
