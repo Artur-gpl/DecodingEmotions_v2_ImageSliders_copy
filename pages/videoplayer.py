@@ -355,29 +355,29 @@ def display_video_screen(action_id, video_filename, config):
 
     refresh_count = st_autorefresh(
         interval=2000,
-        limit=1,
+        limit=100,
         debounce=False,
         key=timer_key
     )
 
-    # After the 2-second refresh, switch to the rating screen
-    if refresh_count >= 1:
+    # On the first run, display the stimulus.
+    # On the first automatic refresh after 2 seconds, switch to rating.
+    if refresh_count == 0:
+        display_video_rating_interface(
+            video_filename=video_filename,
+            video_path=video_path,
+            config=config,
+            rating_scales=rating_scales,
+            key_prefix="scale_",
+            action_id=action_id,
+            metadata=metadata,
+            header_content=None,
+            display_video_func=display_video_with_mode,
+            display_mode="video_only"
+        )
+    else:
         st.session_state.current_screen = "rating"
         st.rerun()
-
-    # Before the refresh, display the stimulus video
-    display_video_rating_interface(
-        video_filename=video_filename,
-        video_path=video_path,
-        config=config,
-        rating_scales=rating_scales,
-        key_prefix="scale_",
-        action_id=action_id,
-        metadata=metadata,
-        header_content=None,
-        display_video_func=display_video_with_mode,
-        display_mode="video_only"
-    )
 
 
 def display_rating_screen(action_id, video_filename, config):
@@ -453,6 +453,9 @@ def display_rating_screen(action_id, video_filename, config):
                     )
 
                 st.session_state.current_video_index += 1
+                st.session_state.stimulus_cycle = (
+                    st.session_state.get("stimulus_cycle", 0) + 1
+                )
                 st.session_state.current_screen = "video"
                 st.session_state.confirm_back = False
 
@@ -460,6 +463,7 @@ def display_rating_screen(action_id, video_filename, config):
                 time.sleep(0.5)
 
                 st.rerun()
+
 
             else:
                 st.error(
