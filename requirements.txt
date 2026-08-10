@@ -17,3 +17,6 @@ cachetools==5.3.2
 user-agents>=2.2.0
 ua-parser>=0.18.0
 streamlit-js-eval>=0.1.7
+
+# Automatic stimulus timer
+streamlit-autorefresh
