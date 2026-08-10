@@ -237,10 +237,11 @@ def display_video_with_mode(
             }}
         </style>
 
-        <script>
-            const video = document.getElementById("main-video");
+                <script>
+            const video = document.getElementById('main-video');
 
-            video.addEventListener("timeupdate", function () {{
+            // Stop the stimulus after 2 seconds
+            video.addEventListener('timeupdate', function() {{
                 if (video.currentTime >= 2.0) {{
                     video.pause();
                 }}
