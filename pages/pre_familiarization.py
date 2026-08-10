@@ -17,7 +17,7 @@ def show():
     st.info("""
     1. What emotions are being shown by the athlete you just saw? You have to select the **appropriate emotions** from the given options:
 
-            Angry, Happy, Sad, Scared, Surprised, Disgusted, Contempt/Hate/Disdain, and Neutral.
+            Anger, Disgust, Fear, Surprise, Happiness, Triumph, Sadness, Pride, Shame, Contempt, Embarrassment and Neutral.
     """)
     
     st.info("""
