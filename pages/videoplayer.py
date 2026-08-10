@@ -308,7 +308,7 @@ def show():
 
 def display_video_screen(action_id, video_filename, config):
     """
-    Display the stimulus video for two seconds and then
+    Display the stimulus video for 2 seconds and then
     automatically switch to the rating screen.
     """
 
@@ -345,50 +345,48 @@ def display_video_screen(action_id, video_filename, config):
         unsafe_allow_html=True
     )
 
-    timer_key = f"stimulus_timer_{action_id}"
+    if "stimulus_cycle" not in st.session_state:
+        st.session_state.stimulus_cycle = 0
 
-    if st.session_state.get("active_stimulus_id") != action_id:
-        st.session_state.active_stimulus_id = action_id
-        st.session_state.current_screen = "video"
+    timer_key = (
+        f"stimulus_timer_{action_id}_"
+        f"{st.session_state.stimulus_cycle}"
+    )
 
-        st_autorefresh(
-            interval=2000,
-            limit=1,
-            debounce=False,
-            key=timer_key
-        )
+    refresh_count = st_autorefresh(
+        interval=2000,
+        limit=1,
+        debounce=False,
+        key=timer_key
+    )
 
-        display_video_rating_interface(
-            video_filename=video_filename,
-            video_path=video_path,
-            config=config,
-            rating_scales=rating_scales,
-            key_prefix="scale_",
-            action_id=action_id,
-            metadata=metadata,
-            header_content=None,
-            display_video_func=display_video_with_mode,
-            display_mode="video_only"
-        )
-
-    else:
+    # After the 2-second refresh, switch to the rating screen
+    if refresh_count >= 1:
         st.session_state.current_screen = "rating"
-        st.session_state.pop("active_stimulus_id", None)
         st.rerun()
+
+    # Before the refresh, display the stimulus video
+    display_video_rating_interface(
+        video_filename=video_filename,
+        video_path=video_path,
+        config=config,
+        rating_scales=rating_scales,
+        key_prefix="scale_",
+        action_id=action_id,
+        metadata=metadata,
+        header_content=None,
+        display_video_func=display_video_with_mode,
+        display_mode="video_only"
+    )
 
 
 def display_rating_screen(action_id, video_filename, config):
-    """Display only the rating scales (no video)."""
+    """Display only the rating scales."""
+
     user = st.session_state.user
     rating_scales = st.session_state.rating_scales
     video_path = st.session_state.video_path
 
-    # Display rating info
-    current_index = st.session_state.get('current_video_index', 0) + 1
-    total_videos = len(st.session_state.videos_to_rate)
-    #st.info(f"📊 **Rating {current_index} of {total_videos}**. Please rate the video you just watched.")
-
-    # Use shared display function in rating-only mode
     scale_values = display_video_rating_interface(
         video_filename=video_filename,
         video_path=video_path,
@@ -399,52 +397,74 @@ def display_rating_screen(action_id, video_filename, config):
         metadata=None,
         header_content=None,
         display_video_func=display_video_with_mode,
-        display_mode='rating_only'
+        display_mode="rating_only"
     )
 
-    # Navigation buttons
     col1, col2, col3 = st.columns([1, 1, 1])
 
     with col1:
-        if st.button("◀️ Back to Video", use_container_width=True):
-            st.session_state.current_screen = 'video'
+        if st.button(
+            "◀️ Back to Video",
+            use_container_width=True
+        ):
+            st.session_state.stimulus_cycle = (
+                st.session_state.get("stimulus_cycle", 0) + 1
+            )
+            st.session_state.current_screen = "video"
             st.rerun()
 
     with col3:
-        if st.button("Submit Rating ▶️", use_container_width=True, type="primary"):
-            # Validate ratings
+        if st.button(
+            "Submit Rating ▶️",
+            use_container_width=True,
+            type="primary"
+        ):
             validation_errors = _validate_ratings(scale_values)
 
             if validation_errors:
-                st.error("⚠️ Please complete the required ratings:")
+                st.error(
+                    "⚠️ Please complete the required ratings:"
+                )
+
                 for error in validation_errors:
                     st.warning(error)
+
                 st.stop()
 
-            # Save rating
-            if save_rating(user.user_id, action_id, scale_values):
-                st.success("✅ Rating saved successfully!")
+            if save_rating(
+                user.user_id,
+                action_id,
+                scale_values
+            ):
+                st.success(
+                    "✅ Rating saved successfully!"
+                )
 
-                # Track win/loss prediction for this session (for completion screen)
-                win_loss_prediction = scale_values.get('Win or Loss')
+                win_loss_prediction = scale_values.get(
+                    "Win or Loss"
+                )
+
                 if win_loss_prediction is not None:
-                    if 'session_ratings' not in st.session_state:
+                    if "session_ratings" not in st.session_state:
                         st.session_state.session_ratings = {}
-                    st.session_state.session_ratings[action_id] = win_loss_prediction
 
-                # Move to next video
+                    st.session_state.session_ratings[action_id] = (
+                        win_loss_prediction
+                    )
+
                 st.session_state.current_video_index += 1
-                st.session_state.current_screen = 'video'  # Reset to video screen for next video
+                st.session_state.current_screen = "video"
                 st.session_state.confirm_back = False
 
-                # Small delay to show success message
                 import time
                 time.sleep(0.5)
 
-                # Clear and move to next video
                 st.rerun()
+
             else:
-                st.error("❌ Failed to save rating. Please try again.")
+                st.error(
+                    "❌ Failed to save rating. Please try again."
+                )
 
 
 def initialize_video_player(config):
