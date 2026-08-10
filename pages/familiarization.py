@@ -8,6 +8,7 @@ import streamlit.components.v1 as components
 import os
 import pandas as pd
 import base64
+from streamlit_autorefresh import st_autorefresh
 
 from utils.config_loader import load_rating_scales
 from utils.video_rating_display import display_video_rating_interface
@@ -275,7 +276,7 @@ def initialize_familiarization(config):
     st.session_state.familiarization_initialized = True
 
 def display_familiarization_video_screen(video_filename, config):
-    """Display only the video for familiarization (no ratings)."""
+    """Display only the video for familiarization (no ratings), auto-advances after 2 seconds."""
     familiarization_path = st.session_state.familiarization_path
     rating_scales = st.session_state.rating_scales
 
@@ -302,32 +303,40 @@ def display_familiarization_video_screen(video_filename, config):
         </style>
     """, unsafe_allow_html=True)
 
-    # Display video info
-    #current_index = st.session_state.familiarization_video_index
-    #total_videos = len(st.session_state.familiarization_videos)
-    #st.info(f"🎯 **Familiarization Trial - Video {current_index + 1} of {total_videos}**. Watch the video carefully.")
+    if "familiarization_stimulus_cycle" not in st.session_state:
+        st.session_state.familiarization_stimulus_cycle = 0
 
-    # Use shared display function in video-only mode
-    display_video_rating_interface(
-        video_filename=video_filename,
-        video_path=familiarization_path,
-        config=config,
-        rating_scales=rating_scales,
-        key_prefix="famil_scale_",
-        action_id=None,
-        metadata=None,
-        header_content=None,
-        display_video_func=display_video_with_mode,
-        display_mode='video_only'
+    current_index = st.session_state.familiarization_video_index
+    timer_key = (
+        f"famil_stimulus_timer_{current_index}_"
+        f"{st.session_state.familiarization_stimulus_cycle}"
     )
 
-    # Navigation buttons
-    col1, col2, col3 = st.columns([1, 1, 1])
+    refresh_count = st_autorefresh(
+        interval=2000,
+        limit=None,
+        debounce=False,
+        key=timer_key
+    )
 
-    with col2:
-        if st.button("Continue to Rating ▶️", use_container_width=True, type="primary", key="famil_advance_to_rating"):
-            st.session_state.familiarization_current_screen = 'rating'
-            st.rerun()
+    # On the first run, display the stimulus.
+    # On the first automatic refresh after 2 seconds, switch to rating.
+    if refresh_count == 0:
+        display_video_rating_interface(
+            video_filename=video_filename,
+            video_path=familiarization_path,
+            config=config,
+            rating_scales=rating_scales,
+            key_prefix="famil_scale_",
+            action_id=None,
+            metadata=None,
+            header_content=None,
+            display_video_func=display_video_with_mode,
+            display_mode='video_only'
+        )
+    else:
+        st.session_state.familiarization_current_screen = 'rating'
+        st.rerun()
 
 
 def display_familiarization_rating_screen(video_filename, config):
@@ -358,6 +367,9 @@ def display_familiarization_rating_screen(video_filename, config):
 
     with col1:
         if st.button("◀️ Back to Video", use_container_width=True):
+            st.session_state.familiarization_stimulus_cycle = (
+                st.session_state.get("familiarization_stimulus_cycle", 0) + 1
+            )
             st.session_state.familiarization_current_screen = 'video'
             st.rerun()
 
