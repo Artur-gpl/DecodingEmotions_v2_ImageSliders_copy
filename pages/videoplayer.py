@@ -10,6 +10,7 @@ import pandas as pd
 import random
 import base64
 from io import BytesIO
+from streamlit_autorefresh import st_autorefresh
 
 from utils.config_loader import load_rating_scales
 from utils.data_persistence import save_rating, get_rated_videos_for_user
@@ -146,86 +147,111 @@ def _stratified_sample_recursive(df, strat_config, target_count, level):
 
     return selected_ids
 
-def display_video_with_mode(video_file_path, playback_mode='loop', video_width=None, enable_auto_advance=False):
+def display_video_with_mode(
+    video_file_path,
+    playback_mode="loop",
+    video_width=None,
+    enable_auto_advance=False
+):
     """
     Display video with specified playback mode.
 
-    Parameters:
-    - video_file_path: Path to the local video file
-    - playback_mode: 'loop' or 'once'
-        - 'loop': Autoplay, loop enabled, controls visible
-        - 'once': Play for 2 seconds, then stop at black first frame
-    - video_width: Width of video in pixels (for centered display) or percentage string
-    - enable_auto_advance: If True, trigger Streamlit rerun when video ends
+    In once mode, the video plays for two seconds and then pauses.
+    The transition to the rating screen is handled separately by
+    display_video_screen().
     """
+
     if not os.path.exists(video_file_path):
         st.error(f"Video file not found: {video_file_path}")
         return
 
-    if playback_mode == 'loop':
-        # Loop mode: autoplay with controls and looping
+    if playback_mode == "loop":
         if video_width:
-            # Centered with specified width
             col1, col2, col3 = st.columns([1, 2, 1])
+
             with col2:
-                st.video(video_file_path, autoplay=True, loop=True)
+                st.video(
+                    video_file_path,
+                    autoplay=True,
+                    loop=True
+                )
         else:
-            st.video(video_file_path, autoplay=True, loop=True)
+            st.video(
+                video_file_path,
+                autoplay=True,
+                loop=True
+            )
 
-    elif playback_mode == 'once':
-        # Once mode: Play for 2 seconds, then stop and show black first frame
-        with open(video_file_path, 'rb') as f:
-            video_bytes = f.read()
-        video_base64 = base64.b64encode(video_bytes).decode()
+    elif playback_mode == "once":
+        with open(video_file_path, "rb") as video_file:
+            video_bytes = video_file.read()
 
-        # Determine width style
+        video_base64 = base64.b64encode(video_bytes).decode("utf-8")
+
         if video_width:
-            if isinstance(video_width, str) and '%' in video_width:
+            if isinstance(video_width, str) and "%" in video_width:
                 width_style = f"width: {video_width};"
             else:
                 width_style = f"width: {video_width}px;"
         else:
             width_style = "max-width: 100%;"
 
-        # Create HTML5 video player that plays for 2 seconds then resets to frame 0
         video_html = f"""
-        <div style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; background: transparent;">
+        <div
+            style="
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: transparent;
+            "
+        >
             <video
                 id="main-video"
                 autoplay
                 muted
-                style="{width_style} max-height: 85vh; height: auto; object-fit: contain;"
+                playsinline
+                style="
+                    {width_style}
+                    max-height: 85vh;
+                    height: auto;
+                    object-fit: contain;
+                "
             >
-                <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
+                <source
+                    src="data:video/mp4;base64,{video_base64}"
+                    type="video/mp4"
+                >
                 Your browser does not support the video tag.
             </video>
         </div>
+
         <style>
             video::-webkit-media-controls {{
                 display: none !important;
             }}
+
             video::-webkit-media-controls-enclosure {{
                 display: none !important;
             }}
         </style>
+
         <script>
-            const video = document.getElementById('main-video');
-            
-            // Play for 2 seconds, then pause and reset to first frame (black screen)
-            video.addEventListener('timeupdate', function() {{
+            const video = document.getElementById("main-video");
+
+            video.addEventListener("timeupdate", function () {{
                 if (video.currentTime >= 2.0) {{
                     video.pause();
-                    video.currentTime = 0;
                 }}
             }});
         </script>
         """
+
         components.html(video_html, height=700)
 
     else:
-        # Fallback to default
         st.video(video_file_path)
-
 
 def show():
     """Display the video player screen."""
@@ -280,60 +306,74 @@ def show():
         display_rating_interface(action_id, current_video, config)
 
 def display_video_screen(action_id, video_filename, config):
-    """Display only the video (centered, no ratings)."""
+    """
+    Display the stimulus video for two seconds and then
+    automatically switch to the rating screen.
+    """
+
     video_path = st.session_state.video_path
     metadata = st.session_state.metadata
     rating_scales = st.session_state.rating_scales
 
-    # Add custom CSS to eliminate vertical spacing
-    st.markdown("""
+    st.markdown(
+        """
         <style>
         .stApp > div:first-child {
             padding-top: 0rem;
         }
+
         div[data-testid="stVerticalBlock"] > div {
             gap: 0rem;
         }
+
         .element-container {
             margin: 0rem;
             padding: 0rem;
         }
+
         .stMarkdown {
             margin: 0rem;
             padding: 0rem;
         }
+
         [data-testid="stHorizontalBlock"] {
             gap: 0rem;
         }
         </style>
-    """, unsafe_allow_html=True)
-
-    # Display video info
-    #current_index = st.session_state.get('current_video_index', 0) + 1
-    #total_videos = len(st.session_state.videos_to_rate)
-    #st.info(f"🎬 **Video {current_index} of {total_videos}**. Watch the video carefully.")
-
-    # Use shared display function in video-only mode
-    display_video_rating_interface(
-        video_filename=video_filename,
-        video_path=video_path,
-        config=config,
-        rating_scales=rating_scales,
-        key_prefix="scale_",
-        action_id=action_id,
-        metadata=metadata,
-        header_content=None,
-        display_video_func=display_video_with_mode,
-        display_mode='video_only'
+        """,
+        unsafe_allow_html=True
     )
 
-    # Manual advance button
-    col1, col2, col3 = st.columns([1, 1, 1])
+    timer_key = f"stimulus_timer_{action_id}"
 
-    with col2:
-        if st.button("Continue to Rating ▶️", use_container_width=True, type="primary", key="advance_to_rating"):
-            st.session_state.current_screen = 'rating'
-            st.rerun()
+    if st.session_state.get("active_stimulus_id") != action_id:
+        st.session_state.active_stimulus_id = action_id
+        st.session_state.current_screen = "video"
+
+        st_autorefresh(
+            interval=2000,
+            limit=1,
+            debounce=False,
+            key=timer_key
+        )
+
+        display_video_rating_interface(
+            video_filename=video_filename,
+            video_path=video_path,
+            config=config,
+            rating_scales=rating_scales,
+            key_prefix="scale_",
+            action_id=action_id,
+            metadata=metadata,
+            header_content=None,
+            display_video_func=display_video_with_mode,
+            display_mode="video_only"
+        )
+
+    else:
+        st.session_state.current_screen = "rating"
+        st.session_state.pop("active_stimulus_id", None)
+        st.rerun()
 
 
 def display_rating_screen(action_id, video_filename, config):
