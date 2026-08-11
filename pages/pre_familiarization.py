@@ -11,7 +11,7 @@ def show():
     
     #### Please read the following instructions carefully!
 
-    You will be shown a series of images and videos of athletes, each for 2 seconds, after which you have to answer 2 simple questions:
+    You will be shown a series of images of athletes, each for 2 seconds, after which you have to answer 2 simple questions:
     """)
 
     st.info("""
