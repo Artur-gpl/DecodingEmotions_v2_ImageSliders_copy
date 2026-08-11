@@ -43,7 +43,7 @@ def show():
     """)
 
     st.markdown("""
-    Now, if you have understood these instructions, proceed to the **3 practice clips, followed by a message, after which your survey will begin.** 
+    Now, if you have understood these instructions, proceed to the **3 practice images, followed by a message, after which your survey will begin.** 
     
     Please press start below, to begin your practice trial.
     """)
