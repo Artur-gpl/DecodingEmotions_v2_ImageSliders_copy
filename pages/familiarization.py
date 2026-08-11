@@ -366,7 +366,7 @@ def display_familiarization_rating_screen(video_filename, config):
     col1, col2, col3 = st.columns([1, 1, 1])
 
     with col1:
-        if st.button("◀️ Back to Video", use_container_width=True):
+        if st.button("◀️ Back to Image", use_container_width=True):
             st.session_state.familiarization_stimulus_cycle = (
                 st.session_state.get("familiarization_stimulus_cycle", 0) + 1
             )
