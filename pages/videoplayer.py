@@ -404,7 +404,7 @@ def display_rating_screen(action_id, video_filename, config):
 
     with col1:
         if st.button(
-            "◀️ Back to Video",
+            "◀️ Back to Image",
             use_container_width=True
         ):
             st.session_state.stimulus_cycle = (
