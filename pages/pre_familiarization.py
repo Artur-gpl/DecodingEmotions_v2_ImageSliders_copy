@@ -25,7 +25,7 @@ def show():
     """)
 
     st.markdown("""        
-    For each clip in the survey, please indicate whether the athlete won or lost, and rate the emotions you observe. 
+    For each image in the survey, please indicate whether the athlete won or lost, and rate the emotions you observe. 
     
     **You can pick multiple emotions (as many as you need). Each emotion is rated independently on a 0 to 100 scale. Each of these emotions has to be rated separately, they do not need to add up to 100.**
     """)
