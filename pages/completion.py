@@ -87,7 +87,7 @@ def show():
     st.success("""
     ### Thank you for your participation!
 
-    You have completed rating all available images.
+    You have completed rating all available images. If you participated via Survey Cicle here is your code: M7G5-YHGZ-YKTZ-95CU
 
     Below, you see how well you performed in predicting the competition outcomes based on the images.
     """)
